@@ -1,0 +1,23 @@
+name: CD Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy theme via SSH
+        env:
+          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+          SSH_USER: ${{ secrets.PROD_SSH_USER }}
+          WP_PATH: ${{ secrets.PROD_WP_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_SSH_KEY }}" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          SSH_KEY=ssh_key.pem bash infra/deploy-theme.sh

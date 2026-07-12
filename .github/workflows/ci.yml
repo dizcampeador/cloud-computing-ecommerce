@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: cs2pr, phpcs
+
+      - name: PHP syntax check (php -l)
+        run: |
+          find theme -name "*.php" -print0 | xargs -0 -n1 -I{} php -l {}
+
+      - name: WordPress Coding Standards
+        run: |
+          composer global require wp-coding-standards/wpcs --no-interaction
+          composer global require dealerdirect/phpcodesniffer-composer-installer --no-interaction
+          phpcs --standard=WordPress theme/camisetas-theme || true
+
+      - name: Bash syntax check
+        run: |
+          find infra -name "*.sh" -print0 | xargs -0 -n1 bash -n

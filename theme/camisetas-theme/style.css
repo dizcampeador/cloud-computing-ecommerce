@@ -1,0 +1,146 @@
+/*
+Theme Name: Camisetas Theme
+Theme URI: https://32.198.153.43
+Description: Child theme de Storefront para tienda de camisetas. Estética inspirada en CarlaGritte (paleta oscura + acento dorado, tipografía serif/sans), reinterpretada — sin assets con derechos de terceros.
+Author: Javier Diz Pérez
+Template: storefront
+Version: 1.0.0
+Text Domain: camisetas-theme
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap');
+
+:root {
+    --bg: #0d0d0d;
+    --parchment: #f0ead6;
+    --accent: #b8975a; /* dorado reinterpretado, mas calido que el gris de CarlaGritte */
+    --burgundy: #5c1a1a;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Work Sans', -apple-system, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--parchment);
+    font-family: var(--font-body);
+}
+
+h1, h2, h3, h4,
+.site-title, .site-title a {
+    font-family: var(--font-heading);
+    color: var(--parchment);
+    letter-spacing: 0.02em;
+}
+
+a {
+    color: var(--accent);
+}
+
+/* Navbar */
+.site-header {
+    background: rgba(13, 13, 13, 0.92);
+    border-bottom: 1px solid rgba(184, 151, 90, 0.2);
+}
+
+.site-header .site-title a,
+.site-header .site-description {
+    color: var(--parchment);
+}
+
+.main-navigation ul li a {
+    color: rgba(240, 234, 214, 0.8);
+    font-family: var(--font-body);
+    transition: color 0.3s ease;
+}
+
+.main-navigation ul li a:hover {
+    color: var(--accent);
+}
+
+/* Footer */
+.site-footer,
+.site-footer .col-full {
+    background: rgba(13, 13, 13, 0.95);
+    border-top: 1px solid rgba(184, 151, 90, 0.2);
+    color: rgba(240, 234, 214, 0.7);
+}
+
+.site-footer a {
+    color: var(--accent);
+}
+
+/* Botones estilo "ink-fill" */
+.button, .add_to_cart_button, .single_add_to_cart_button,
+.checkout-button, input[type="submit"] {
+    background: transparent !important;
+    border: 1px solid var(--accent) !important;
+    color: var(--parchment) !important;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: 1;
+}
+
+.button::before, .add_to_cart_button::before, .single_add_to_cart_button::before,
+.checkout-button::before, input[type="submit"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: -1;
+}
+
+.button:hover::before, .add_to_cart_button:hover::before,
+.single_add_to_cart_button:hover::before, .checkout-button:hover::before,
+input[type="submit"]:hover::before {
+    transform: scaleX(1);
+}
+
+.button:hover, .add_to_cart_button:hover, .single_add_to_cart_button:hover,
+.checkout-button:hover, input[type="submit"]:hover {
+    color: var(--bg) !important;
+}
+
+/* Hero (front-page.php) */
+.camisetas-hero {
+    background: linear-gradient(180deg, rgba(92,26,26,0.15), var(--bg) 70%);
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
+}
+
+.camisetas-hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+}
+
+.camisetas-hero p {
+    color: rgba(240, 234, 214, 0.8);
+    max-width: 42rem;
+    margin: 0 auto 2rem;
+}
+
+.camisetas-hero .button {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+}
+
+.camisetas-featured {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+.camisetas-featured h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Tienda / producto: heredan paleta via WooCommerce defaults + tokens de arriba */
+.woocommerce ul.products li.product .price,
+.woocommerce div.product p.price {
+    color: var(--accent);
+}

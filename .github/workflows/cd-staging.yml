@@ -1,0 +1,27 @@
+name: CD Staging
+
+# NOTA: el lab solo tiene una instancia EC2 disponible. "Staging" es simulado:
+# mismo servidor, mismo WP_PATH que produccion (no hay entorno separado real).
+# Limitacion documentada en _specs/04-infra-branching-cicd.md.
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy theme via SSH
+        env:
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          WP_PATH: ${{ secrets.STAGING_WP_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.STAGING_SSH_KEY }}" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          SSH_KEY=ssh_key.pem bash infra/deploy-theme.sh

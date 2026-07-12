@@ -3,6 +3,10 @@ name: CD Staging
 # NOTA: el lab solo tiene una instancia EC2 disponible. "Staging" es simulado:
 # mismo servidor, mismo WP_PATH que produccion (no hay entorno separado real).
 # Limitacion documentada en _specs/04-infra-branching-cicd.md.
+#
+# Runner self-hosted (registrado en la propia EC2) en vez de ubuntu-latest:
+# el SG solo permite SSH desde la IP local, no desde runners de GitHub, asi
+# que el deploy corre localmente en el servidor en vez de saltar por SSH.
 
 on:
   push:
@@ -10,18 +14,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ec2]
     environment: staging
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy theme via SSH
+      - name: Deploy theme (local)
         env:
-          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
-          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           WP_PATH: ${{ secrets.STAGING_WP_PATH }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.STAGING_SSH_KEY }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
-          SSH_KEY=ssh_key.pem bash infra/deploy-theme.sh
+        run: bash infra/deploy-theme-local.sh

@@ -23,10 +23,11 @@ jobs:
           find theme -name "*.php" -print0 | xargs -0 -n1 -I{} php -l {}
 
       - name: WordPress Coding Standards
+        continue-on-error: true
         run: |
-          composer global require wp-coding-standards/wpcs --no-interaction
-          composer global require dealerdirect/phpcodesniffer-composer-installer --no-interaction
-          phpcs --standard=WordPress theme/camisetas-theme || true
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require dealerdirect/phpcodesniffer-composer-installer squizlabs/php_codesniffer:^3.9 wp-coding-standards/wpcs --no-interaction
+          phpcs --standard=WordPress theme/camisetas-theme
 
       - name: Bash syntax check
         run: |

@@ -4,20 +4,17 @@ on:
   push:
     branches: [main]
 
+# Runner self-hosted (registrado en la propia EC2) en vez de ubuntu-latest:
+# ver nota equivalente en cd-staging.yml.
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ec2]
     environment: production
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy theme via SSH
+      - name: Deploy theme (local)
         env:
-          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
-          SSH_USER: ${{ secrets.PROD_SSH_USER }}
           WP_PATH: ${{ secrets.PROD_WP_PATH }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PROD_SSH_KEY }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
-          SSH_KEY=ssh_key.pem bash infra/deploy-theme.sh
+        run: bash infra/deploy-theme-local.sh

@@ -18,3 +18,4 @@ function camisetas_theme_enqueue_styles() {
         wp_get_theme()->get( 'Version' )
     );
 }
+function broken_syntax_test( {
